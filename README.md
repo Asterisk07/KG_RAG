@@ -1,3 +1,5 @@
+Ayushmaan Pandey’s Submission for the LLM-2401 Assignment (ELL 881, Fall '24)
+
 ## Instructions for the Assignment
 
 **1. Set up the environment following Steps 1-4 in the original README.**
@@ -12,44 +14,39 @@
 
 **6. Evaluate these model variants by changing the model output path in the file `data/assignment_results/evaluate_gemini.py` and running it.**
 
-
-
-
-
 ## Original README
 
 <p align="center">
   <img src="https://github.com/BaranziniLab/KG_RAG/assets/42702311/0b2f5b42-761e-4d5b-8d6f-77c8b965f017" width="450">
 </p>
 
-
-
-
 ## Table of Contents
+
 [What is KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment#what-is-kg-rag)
 
 [Example use case of KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment#example-use-case-of-kg-rag)
- - [Prompting GPT without KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment#without-kg-rag)  
- - [Prompting GPT with KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment#with-kg-rag)
- - [Example notebook for KG-RAG with GPT](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/notebooks/kg_rag_based_gpt_prompts.ipynb)
+
+- [Prompting GPT without KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment#without-kg-rag)
+- [Prompting GPT with KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment#with-kg-rag)
+- [Example notebook for KG-RAG with GPT](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/notebooks/kg_rag_based_gpt_prompts.ipynb)
 
 [How to run KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment#how-to-run-kg-rag)
- - [Step 1: Clone the repo](https://github.com/C-anwoy/LLM2401-Assignment#step-1-clone-the-repo)
- - [Step 2: Create a virtual environment](https://github.com/C-anwoy/LLM2401-Assignment#step-2-create-a-virtual-environment)
- - [Step 3: Install dependencies](https://github.com/C-anwoy/LLM2401-Assignment#step-3-install-dependencies)
- - [Step 4: Update config.yaml](https://github.com/C-anwoy/LLM2401-Assignment#step-4-update-configyaml)
- - [Step 5: Run the setup script](https://github.com/C-anwoy/LLM2401-Assignment#step-5-run-the-setup-script)
- - [Step 6: Run KG-RAG from your terminal](https://github.com/C-anwoy/LLM2401-Assignment#step-6-run-kg-rag-from-your-terminal)
-    - [Using GPT](https://github.com/C-anwoy/LLM2401-Assignment#using-gpt)
-    - [Using GPT interactive mode](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/README.md#using-gpt-interactive-mode)
-    - [Using Llama](https://github.com/C-anwoy/LLM2401-Assignment#using-llama)
-    - [Using Llama interactive mode](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/README.md#using-llama-interactive-mode)
-  - [Command line arguments for KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment?tab=readme-ov-file#command-line-arguments-for-kg-rag)
-  
+
+- [Step 1: Clone the repo](https://github.com/C-anwoy/LLM2401-Assignment#step-1-clone-the-repo)
+- [Step 2: Create a virtual environment](https://github.com/C-anwoy/LLM2401-Assignment#step-2-create-a-virtual-environment)
+- [Step 3: Install dependencies](https://github.com/C-anwoy/LLM2401-Assignment#step-3-install-dependencies)
+- [Step 4: Update config.yaml](https://github.com/C-anwoy/LLM2401-Assignment#step-4-update-configyaml)
+- [Step 5: Run the setup script](https://github.com/C-anwoy/LLM2401-Assignment#step-5-run-the-setup-script)
+- [Step 6: Run KG-RAG from your terminal](https://github.com/C-anwoy/LLM2401-Assignment#step-6-run-kg-rag-from-your-terminal)
+  - [Using GPT](https://github.com/C-anwoy/LLM2401-Assignment#using-gpt)
+  - [Using GPT interactive mode](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/README.md#using-gpt-interactive-mode)
+  - [Using Llama](https://github.com/C-anwoy/LLM2401-Assignment#using-llama)
+  - [Using Llama interactive mode](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/README.md#using-llama-interactive-mode)
+- [Command line arguments for KG-RAG](https://github.com/C-anwoy/LLM2401-Assignment?tab=readme-ov-file#command-line-arguments-for-kg-rag)
+
 [BiomixQA: Benchmark dataset](https://github.com/C-anwoy/LLM2401-Assignment/tree/main?tab=readme-ov-file#biomixqa-benchmark-dataset)
 
 [Citation](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/README.md#citation)
-
 
 ## What is KG-RAG?
 
@@ -64,15 +61,15 @@ It is a task agnostic framework that combines the explicit knowledge of a Knowle
 
 Here, we utilize a massive biomedical KG called [SPOKE](https://spoke.ucsf.edu/) as the provider for the biomedical context. SPOKE has incorporated over 40 biomedical knowledge repositories from diverse domains, each focusing on biomedical concept like genes, proteins, drugs, compounds, diseases, and their established connections. SPOKE consists of more than 27 million nodes of 21 different types and 53 million edges of 55 types [[Ref](https://doi.org/10.1093/bioinformatics/btad080)]
 
+The main feature of KG-RAG is that it extracts "prompt-aware context" from SPOKE KG, which is defined as:
 
-The main feature of KG-RAG is that it extracts "prompt-aware context" from SPOKE KG, which is defined as: 
-
-**the minimal context sufficient enough to respond to the user prompt.** 
+**the minimal context sufficient enough to respond to the user prompt.**
 
 Hence, this framework empowers a general-purpose LLM by incorporating an optimized domain-specific 'prompt-aware context' from a biomedical KG.
 
 ## Example use case of KG-RAG
-Following snippet shows the news from FDA [website](https://www.fda.gov/drugs/news-events-human-drugs/fda-approves-treatment-weight-management-patients-bardet-biedl-syndrome-aged-6-or-older) about the drug **"setmelanotide"** approved by FDA for weight management in patients with *Bardet-Biedl Syndrome*
+
+Following snippet shows the news from FDA [website](https://www.fda.gov/drugs/news-events-human-drugs/fda-approves-treatment-weight-management-patients-bardet-biedl-syndrome-aged-6-or-older) about the drug **"setmelanotide"** approved by FDA for weight management in patients with _Bardet-Biedl Syndrome_
 
 <img src="https://github.com/BaranziniLab/KG_RAG/assets/42702311/fc4d0b8d-0edb-461d-86c5-9d0d191bd97d" width="600" height="350">
 
@@ -80,14 +77,14 @@ Following snippet shows the news from FDA [website](https://www.fda.gov/drugs/ne
 
 ### WITHOUT KG-RAG
 
-*Note: This example was run using KG-RAG v0.3.0. We are prompting GPT from the terminal, NOT from the chatGPT browser. Temperature parameter is set to 0 for all the analysis. Refer [this](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/config.yaml) yaml file for parameter setting*
+_Note: This example was run using KG-RAG v0.3.0. We are prompting GPT from the terminal, NOT from the chatGPT browser. Temperature parameter is set to 0 for all the analysis. Refer [this](https://github.com/C-anwoy/LLM2401-Assignment/blob/main/config.yaml) yaml file for parameter setting_
 
 <video src="https://github.com/C-anwoy/LLM2401-Assignment/assets/42702311/dbabb812-2a8a-48b6-9785-55b983cb61a4" controls="controls" style="max-width: 730px;">
 </video>
 
 ### WITH KG-RAG
 
-*Note: This example was run using KG-RAG v0.3.0. Temperature parameter is set to 0 for all the analysis. Refer [this](https://github.com/BaranziniLab/KG_RAG/blob/main/config.yaml) yaml file for parameter setting*
+_Note: This example was run using KG-RAG v0.3.0. Temperature parameter is set to 0 for all the analysis. Refer [this](https://github.com/BaranziniLab/KG_RAG/blob/main/config.yaml) yaml file for parameter setting_
 
 <video src="https://github.com/C-anwoy/LLM2401-Assignment/assets/42702311/acd08954-a496-4a61-a3b1-8fc4e647b2aa" controls="controls" style="max-width: 730px;">
 </video>
@@ -103,7 +100,9 @@ You can see that, KG-RAG was able to give the correct information about the FDA 
 Clone this repository. All Biomedical data used in the paper are uploaded to this repository, hence you don't have to download that separately.
 
 ### Step 2: Create a virtual environment
+
 Note: Scripts in this repository were run using python 3.10.9
+
 ```
 conda create -n kg_rag python=3.10.9
 conda activate kg_rag
@@ -117,14 +116,14 @@ pip install -r requirements.txt
 ```
 
 ### Step 4: Run the setup script
-Note: Make sure you are in KG_RAG folder. 
+
+Note: Make sure you are in KG_RAG folder.
 
 Running the setup script will create disease vector database for KG-RAG
 
 ```
 python -m kg_rag.run_setup
 ```
-
 
 ## Citation
 
@@ -136,17 +135,3 @@ python -m kg_rag.run_setup
   year={2023}
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
