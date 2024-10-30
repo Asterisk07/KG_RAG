@@ -328,9 +328,10 @@ def load_chroma(vector_db_path, sentence_embedding_model):
 
 
 def retrieve_context(question, vectorstore, embedding_function, node_context_df, context_volume, context_sim_threshold, context_sim_min_threshold, edge_evidence, model_id="gpt-3.5-turbo", api=False):
-    # print("question:", question)
+    # print("question recieved")
+    # raise ZeroDivisionError
     entities = disease_entity_extractor_v2(question, model_id)
-    # print("entities:", entities)
+    # print("got entities")
     node_hits = []
     if entities:
         max_number_of_high_similarity_context_per_node = int(

@@ -2,3 +2,4 @@ kg_rag
 venv_kg_rag
 pat.txt
 cachegpt/joblib/kg_rag/utility/
+*eda.ipynb
