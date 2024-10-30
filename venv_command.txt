@@ -1,2 +1,4 @@
 python -m venv venv_kg_rag
 venv_kg_rag\Scripts\activate
+
+pip install -r requirements.txt
