@@ -111,6 +111,11 @@ def _final_answer(row):
         return False
 
 
+def _append_prior():
+    prior = '\nProvenance & Symptoms information is useless. \nSimilar diseases tend to have similar gene associations.'
+    return prior
+
+
 def main():
     start_time = time.time()
 
@@ -147,12 +152,14 @@ def main():
 
                 ### MODE 1: jsonlize the context from KG search ###
                 ### Please implement the first strategy here    ###
+
                 output = '...'
 
             if MODE == "2":
                 ### MODE 2: Add the prior domain knowledge      ###
                 ### Please implement the second strategy here   ###
-                output = '...'
+                # output = '...'
+                context += _append_prior()
 
             if MODE == "3":
                 ### MODE 3: Combine MODE 1 & 2                  ###
