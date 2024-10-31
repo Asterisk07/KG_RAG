@@ -4,5 +4,8 @@ pat.txt
 cachegpt/joblib/kg_rag/utility/
 *eda.ipynb
 
-data/assignment_results/gemini_1.5_flash_kg_rag_based_mcq_0.csv
+data/assignment_results/gemini_1.5_flash_kg_rag_based_mcq*.csv
 try_data*.csv
+
+gpt_config*.env
+
