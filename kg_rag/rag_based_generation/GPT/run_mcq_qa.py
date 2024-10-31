@@ -134,25 +134,17 @@ def main():
     for index, row in tqdm(question_df.iterrows(), total=len(question_df)):
         try:
             question = row["text"]
+            # print("fetching context")
+            context, entity = retrieve_context(row["text"], vectorstore, embedding_function_for_context_retrieval, node_context_df, CONTEXT_VOLUME,
+                                               QUESTION_VS_CONTEXT_SIMILARITY_PERCENTILE_THRESHOLD, QUESTION_VS_CONTEXT_MINIMUM_SIMILARITY, edge_evidence, model_id=CHAT_MODEL_ID, return_entities_flag=True)
+            # print(f"fetched context : {context[:10]}")
+
             if MODE == "0":
                 ### MODE 0: Original KG_RAG                     ###
-                # print("fetching context")
-                context, entity = retrieve_context(row["text"], vectorstore, embedding_function_for_context_retrieval, node_context_df, CONTEXT_VOLUME,
-                                                   QUESTION_VS_CONTEXT_SIMILARITY_PERCENTILE_THRESHOLD, QUESTION_VS_CONTEXT_MINIMUM_SIMILARITY, edge_evidence, model_id=CHAT_MODEL_ID, return_entities_flag=True)
-                # print(f"fetched context : {context[:10]}")
-                enriched_prompt = "Context: " + context + "\n" + "Question: " + question
-
-                if TRIAL_FLAG:
-                    context_list.append(context)
-                    prompt_list.append(enriched_prompt)
-                    entity_list.append(entity)
-
-                # print("extracting response now")
-
-                output = get_Gemini_response(
-                    enriched_prompt, SYSTEM_PROMPT, temperature=TEMPERATURE)
+                pass
 
             if MODE == "1":
+
                 ### MODE 1: jsonlize the context from KG search ###
                 ### Please implement the first strategy here    ###
                 output = '...'
@@ -167,7 +159,18 @@ def main():
                 ### Please implement the third strategy here    ###
                 output = '...'
 
+            enriched_prompt = "Context: " + context + "\n" + "Question: " + question
+
+            output = get_Gemini_response(
+                enriched_prompt, SYSTEM_PROMPT, temperature=TEMPERATURE)
+
             answer_list.append((row["text"], row["correct_node"], output))
+
+            if TRIAL_FLAG:
+                context_list.append(context)
+                prompt_list.append(enriched_prompt)
+                entity_list.append(entity)
+
         except Exception as e:
             print("Error in processing question: ", row["text"])
             print("Error: ", e)
@@ -186,7 +189,7 @@ def main():
         answer_df['context'] = context_list
         answer_df['prompt'] = prompt_list
         answer_df['final_ans'] = answer_df.apply(_final_answer, axis=1)
-        answer_df.to_csv('try_data.csv', index=False)
+        answer_df.to_csv(f'try_data_{MODE}.csv', index=False)
 
 
 if __name__ == "__main__":

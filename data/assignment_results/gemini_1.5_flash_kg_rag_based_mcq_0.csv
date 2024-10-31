@@ -9,8 +9,3 @@ question,correct_answer,llm_answer
   ""answer"": ""CHEK2""
 }}
 ```"
-"Out of the given list, which Gene is associated with psoriasis and herpes zoster. Given list is:  MIF, HLA-B,  PLA2G6,  SCN1A, KITLG",HLA-B,"```json
-{{
-  ""answer"": ""HLA-B""
-}}
-```"
