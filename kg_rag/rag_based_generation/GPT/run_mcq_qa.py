@@ -23,6 +23,8 @@ parser.add_argument("--num", type=int, default=-1,
 parser.add_argument("--eval", action='store_true', help="Evaluate or not")
 parser.add_argument("--interactive", action='store_true',
                     help="Interactive or not")
+parser.add_argument("--trial", action='store_true',
+                    help="Generate additional df or not")
 args = parser.parse_args()
 
 # Access the arguments
@@ -30,6 +32,7 @@ CHAT_MODEL_ID = args.chat_model_id
 MODE = str(args.mode)
 EVALUATE_FLAG = args.eval
 INTERACTIVE_FLAG = args.interactive
+TRIAL_FLAG = args.trial
 NUM = args.num
 
 if NUM <= 0 and NUM != -1:
@@ -101,6 +104,13 @@ while INTERACTIVE_FLAG:
     print("------------------------------------------")
 
 
+def _final_answer(row):
+    try:
+        return json.loads(row['llm_answer'].replace('```', '').replace('\n', '').replace('json', '').replace('{{', '{').replace('}}', '}').split('}')[0] + '}')['answer']
+    except:
+        return False
+
+
 def main():
     start_time = time.time()
 
@@ -116,17 +126,29 @@ def main():
     answer_list = []
     # print(f"Running in mode {MODE}")
 
+    if TRIAL_FLAG:
+        context_list = []
+        entity_list = []
+        prompt_list = []
+
     for index, row in tqdm(question_df.iterrows(), total=len(question_df)):
         try:
             question = row["text"]
             if MODE == "0":
                 ### MODE 0: Original KG_RAG                     ###
                 # print("fetching context")
-                context = retrieve_context(row["text"], vectorstore, embedding_function_for_context_retrieval, node_context_df, CONTEXT_VOLUME,
-                                           QUESTION_VS_CONTEXT_SIMILARITY_PERCENTILE_THRESHOLD, QUESTION_VS_CONTEXT_MINIMUM_SIMILARITY, edge_evidence, model_id=CHAT_MODEL_ID)
-                # print("fetched context")
+                context, entity = retrieve_context(row["text"], vectorstore, embedding_function_for_context_retrieval, node_context_df, CONTEXT_VOLUME,
+                                                   QUESTION_VS_CONTEXT_SIMILARITY_PERCENTILE_THRESHOLD, QUESTION_VS_CONTEXT_MINIMUM_SIMILARITY, edge_evidence, model_id=CHAT_MODEL_ID, return_entities_flag=True)
+                # print(f"fetched context : {context[:10]}")
                 enriched_prompt = "Context: " + context + "\n" + "Question: " + question
+
+                if TRIAL_FLAG:
+                    context_list.append(context)
+                    prompt_list.append(enriched_prompt)
+                    entity_list.append(entity)
+
                 # print("extracting response now")
+
                 output = get_Gemini_response(
                     enriched_prompt, SYSTEM_PROMPT, temperature=TEMPERATURE)
 
@@ -157,6 +179,14 @@ def main():
     answer_df.to_csv(output_file, index=False, header=True)
     print("Save the model outputs in ", output_file)
     print("Completed in {} min".format((time.time()-start_time)/60))
+
+    if TRIAL_FLAG:
+        # print(f'lenghts are {len(entity_list)}, {len(context_list)}')
+        answer_df['entity'] = entity_list
+        answer_df['context'] = context_list
+        answer_df['prompt'] = prompt_list
+        answer_df['final_ans'] = answer_df.apply(_final_answer, axis=1)
+        answer_df.to_csv('try_data.csv', index=False)
 
 
 if __name__ == "__main__":

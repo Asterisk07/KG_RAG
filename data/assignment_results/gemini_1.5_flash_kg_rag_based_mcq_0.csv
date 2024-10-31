@@ -4,3 +4,13 @@ question,correct_answer,llm_answer
   ""answer"": ""HLA-B""
 }}
 ```"
+"Out of the given list, which Gene is associated with psoriasis and myelodysplastic syndrome. Given list is:  NOD2,  CHEK2, HLA-B, GCKR,  PKNOX2",HLA-B,"```json
+{{
+  ""answer"": ""CHEK2""
+}}
+```"
+"Out of the given list, which Gene is associated with psoriasis and herpes zoster. Given list is:  MIF, HLA-B,  PLA2G6,  SCN1A, KITLG",HLA-B,"```json
+{{
+  ""answer"": ""HLA-B""
+}}
+```"

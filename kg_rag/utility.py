@@ -327,7 +327,7 @@ def load_chroma(vector_db_path, sentence_embedding_model):
     return Chroma(persist_directory=vector_db_path, embedding_function=embedding_function)
 
 
-def retrieve_context(question, vectorstore, embedding_function, node_context_df, context_volume, context_sim_threshold, context_sim_min_threshold, edge_evidence, model_id="gpt-3.5-turbo", api=False):
+def retrieve_context(question, vectorstore, embedding_function, node_context_df, context_volume, context_sim_threshold, context_sim_min_threshold, edge_evidence, model_id="gpt-3.5-turbo", api=False, return_entities_flag=False):
     # print("question recieved")
     # raise ZeroDivisionError
     entities = disease_entity_extractor_v2(question, model_id)
@@ -378,6 +378,8 @@ def retrieve_context(question, vectorstore, embedding_function, node_context_df,
             else:
                 node_context_extracted += ". ".join(high_similarity_context)
                 node_context_extracted += ". "
+        if return_entities_flag:
+            return node_context_extracted, entities
         return node_context_extracted
     else:
         node_hits = vectorstore.similarity_search_with_score(question, k=5)
@@ -421,6 +423,9 @@ def retrieve_context(question, vectorstore, embedding_function, node_context_df,
             else:
                 node_context_extracted += ". ".join(high_similarity_context)
                 node_context_extracted += ". "
+
+        if return_entities_flag:
+            return node_context_extracted, entities
         return node_context_extracted
 
 

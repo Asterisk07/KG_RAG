@@ -3,3 +3,6 @@ venv_kg_rag
 pat.txt
 cachegpt/joblib/kg_rag/utility/
 *eda.ipynb
+
+data/assignment_results/gemini_1.5_flash_kg_rag_based_mcq_0.csv
+try_data.csv
