@@ -116,6 +116,75 @@ def _append_prior():
     return prior
 
 
+def jsonize_prompt(x, variant_flag=True):
+    gene_key = 'Genetic Associations'
+    variant_key = 'Variant Associations'
+    sentences = x.strip().split('.')
+    d1 = dict()
+
+    for sentence in sentences:
+        if (len(sentence)) == 0:
+            continue
+        sentence_list = sentence.split('and Provenance of this association is')
+
+        reason = None
+        if len(sentence_list) == 2:
+            sentence, reason = sentence_list
+            reason = reason.strip()
+        else:
+            sentence = sentence_list[0]
+        # print(sentence, sentence.split('associates'),sep  = '\n', end = '--------\n\n')
+        u, v = sentence.split('associates')
+        u = u.strip().split(' ', maxsplit=1)
+        v = v.strip().split(' ', maxsplit=1)
+
+        u[0] = u[0].strip()
+        u[1] = u[1].strip()
+
+        v[0] = v[0].strip()
+        v[1] = v[1].strip()
+
+        if v[0] == 'Disease':
+            u, v = v, u
+
+        if (u[0] == 'Disease'):
+            disease = u[0]
+            if (v[0] == 'Variant') and variant_flag:
+                d3 = dict()
+                d3['Variant'] = v[1]
+
+                if reason:
+                    d3['Provenance'] = reason
+
+                if disease not in d1:
+                    d1[disease] = dict()
+
+                if variant_key not in d1[disease]:
+                    d1[disease][variant_key] = list()
+
+                d1[disease][variant_key].append(d3)
+
+            elif (v[0] == 'Gene'):
+                d3 = dict()
+                d3['Gene'] = v[1]
+
+                if reason:
+                    d3['Provenance'] = reason
+
+                if disease not in d1:
+                    d1[disease] = dict()
+
+                if gene_key not in d1[disease]:
+                    d1[disease][gene_key] = list()
+
+                d1[disease][gene_key].append(d3)
+
+                pass
+
+    json_data = json.dumps(d1)
+    return json_data
+
+
 def main():
     start_time = time.time()
 
@@ -148,23 +217,41 @@ def main():
                 ### MODE 0: Original KG_RAG                     ###
                 pass
 
-            if MODE == "1":
+            elif MODE == "1":
 
                 ### MODE 1: jsonlize the context from KG search ###
                 ### Please implement the first strategy here    ###
 
                 output = '...'
 
-            if MODE == "2":
+            elif MODE == "2":
                 ### MODE 2: Add the prior domain knowledge      ###
                 ### Please implement the second strategy here   ###
                 # output = '...'
                 context += _append_prior()
 
-            if MODE == "3":
+            elif MODE == "3":
                 ### MODE 3: Combine MODE 1 & 2                  ###
                 ### Please implement the third strategy here    ###
                 output = '...'
+
+            elif MODE == '11':
+
+                context = jsonize_prompt(context, variant_flag=False)
+
+            elif MODE == '12':
+
+                context = jsonize_prompt(context, variant_flag=True)
+
+            elif MODE == '21':
+
+                context = jsonize_prompt(context, variant_flag=False)
+                context += _append_prior()
+
+            elif MODE == '22':
+
+                context = jsonize_prompt(context, variant_flag=True)
+                context += _append_prior()
 
             enriched_prompt = "Context: " + context + "\n" + "Question: " + question
 
@@ -203,5 +290,15 @@ if __name__ == "__main__":
     main()
 
 if EVALUATE_FLAG:
-    command = "python data/assignment_results/evaluate_gemini.py"
+    command = f"python data/assignment_results/evaluate_gemini.py --mode {MODE}"
     exit_code = os.system(command)
+
+# python -m kg_rag.rag_based_generation.GPT.run_mcq_qa gemini-1.5-flash --mode 0 --eval --trial ;
+'''
+run in git bash
+python -m kg_rag.rag_based_generation.GPT.run_mcq_qa gemini-1.5-flash --mode 2 --eval --trial ;
+python -m kg_rag.rag_based_generation.GPT.run_mcq_qa gemini-1.5-flash --mode 11 --eval --trial ;
+python -m kg_rag.rag_based_generation.GPT.run_mcq_qa gemini-1.5-flash --mode 12 --eval --trial ;
+python -m kg_rag.rag_based_generation.GPT.run_mcq_qa gemini-1.5-flash --mode 21 --eval --trial ;
+python -m kg_rag.rag_based_generation.GPT.run_mcq_qa gemini-1.5-flash --mode 22 --eval --trial ;
+'''
